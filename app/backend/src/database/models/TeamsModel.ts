@@ -1,8 +1,6 @@
 import { ITeamsModel } from '../../Interfaces/Teams/ITeamsModel';
 import SequelizeTeams from './SequelizeTeams';
 import { ITeam } from '../../Interfaces/Teams/ITeam';
-/* import { ID } from '../../Interfaces/index'; */
-/* import { NewEntity } from '../../Interfaces'; */
 
 export default class TeamsModel implements ITeamsModel {
   private model = SequelizeTeams;
