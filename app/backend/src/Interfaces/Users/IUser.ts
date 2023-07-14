@@ -11,5 +11,13 @@ export interface IUser extends Identifiable, ILogin {
   role: string
 }
 
+export interface IToken {
+  token: string
+}
+
+export interface IPayload {
+  email: string;
+}
+
 // usuário a ser retornado pela API
 /* export type IUserResponse = Omit<IUser, 'password'>; */
