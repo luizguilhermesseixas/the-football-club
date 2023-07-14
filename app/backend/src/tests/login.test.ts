@@ -6,7 +6,7 @@ import chaiHttp = require('chai-http');
 
 import { App } from '../app';
 import SequelizeUsers from '../database/models/SequelizeUsers'
-import { loginWithoutPassword, loginWithoutEmail, loginValid, token, user } from './mocks/Users.mock';
+import { loginWithoutPassword, loginWithoutEmail, loginValid, user } from './mocks/Users.mock';
 /* import Validations from '../../src/middlewares/Validations'; */
 
 chai.use(chaiHttp);
@@ -17,7 +17,8 @@ const { expect } = chai;
 
 describe('login test', async function () {
   it('if the login is successful, it should return a token', async function () {
-    sinon.stub(SequelizeUsers, 'findOne').resolves(user as SequelizeUsers);
+    const userBuild = SequelizeUsers.build(user);
+    sinon.stub(SequelizeUsers, 'findOne').resolves(userBuild);
     const { status, body } = await chai.request(app).post('/login').send(loginValid);
 
     expect(status).to.equal(200);
