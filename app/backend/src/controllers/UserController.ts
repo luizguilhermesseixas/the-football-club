@@ -12,4 +12,10 @@ export default class UserController {
     const { status, data } = await this.userService.login(userData);
     res.status(mapStatusHTTP(status)).json(data);
   }
+
+  public async getRole(_req: Request, res: Response) {
+    const token = res.locals.user;
+    const { status, data } = await this.userService.getRole(token);
+    res.status(mapStatusHTTP(status)).json(data);
+  }
 }

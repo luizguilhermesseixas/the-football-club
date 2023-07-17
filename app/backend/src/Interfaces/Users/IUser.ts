@@ -19,5 +19,8 @@ export interface IPayload {
   email: string;
 }
 
+export interface IRole {
+  role: string
+}
 // usuário a ser retornado pela API
 /* export type IUserResponse = Omit<IUser, 'password'>; */

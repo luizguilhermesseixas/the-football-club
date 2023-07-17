@@ -12,4 +12,9 @@ export default class JwtUtils {
     const token = jwt.sign(payload, this.jwtSecret, this.jwtOptions);
     return token;
   }
+
+  decode(token: string): jwt.JwtPayload {
+    const decodedToken = jwt.verify(token, this.jwtSecret);
+    return decodedToken as IPayload;
+  }
 }

@@ -23,6 +23,16 @@ class Validations {
     }
     next();
   }
+
+  static validateToken(req: Request, res: Response, next: NextFunction): Response | void {
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ message: 'Token not found' });
+    }
+    res.locals.user = token;
+    next();
+  }
 }
 
 export default Validations;
