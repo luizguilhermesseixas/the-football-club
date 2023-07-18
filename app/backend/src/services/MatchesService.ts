@@ -14,11 +14,8 @@ export default class MatchesServices {
     return { status: 'SUCCESSFUL', data: allMatches };
   }
 
-/*   public async getTeamById(id: ID): Promise<ServiceResponse<ITeam | null>> {
-    const findTeam = await this.teamsModel.findById(id);
-    if (!findTeam) {
-      return { status: 'NOT_FOUND', data: { message: `Team ${id} not found` } };
-    }
-    return { status: 'SUCCESSFUL', data: findTeam };
-  } */
+  public async getMatchesInProgress(q: string): Promise<ServiceResponse<IMatch[]>> {
+    const matches = await this.matchesModel.findMatchesByProgress(q);
+    return { status: 'SUCCESSFUL', data: matches };
+  }
 }

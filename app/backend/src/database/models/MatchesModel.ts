@@ -3,6 +3,14 @@ import SequelizeMatches from './SequelizeMatches';
 import SequelizeTeams from './SequelizeTeams';
 import { IMatch } from '../../Interfaces/Matches/IMatch';
 
+const { attributes, include } = {
+  attributes: { exclude: ['home_team_id', 'away_team_id'] },
+  include: [
+    { model: SequelizeTeams, as: 'homeTeam', attributes: { exclude: ['id'] } },
+    { model: SequelizeTeams, as: 'awayTeam', attributes: { exclude: ['id'] } },
+  ],
+};
+
 export default class MatchesModel implements IMatchModel {
   private model = SequelizeMatches;
 
@@ -16,12 +24,18 @@ export default class MatchesModel implements IMatchModel {
     });
   }
 
-/*   async findById(id: ITeam['id']): Promise<ITeam | null> {
-    const data = await this.model.findByPk(id);
-    if (data === null) {
-      return null;
+  async findMatchesByProgress(q: string): Promise<IMatch[]> {
+    if (q === 'true') {
+      return this.model.findAll({
+        where: { inProgress: true },
+        attributes,
+        include,
+      });
     }
-    const { teamName } = data;
-    return { id, teamName };
-  } */
+    return this.model.findAll({
+      where: { inProgress: false },
+      attributes,
+      include,
+    });
+  }
 }
