@@ -6,7 +6,7 @@ import {
   CreationOptional,
 } from 'sequelize';
 
-/* import SequelizeTeams from './SequelizeTeams'; */
+import SequelizeTeams from './SequelizeTeams';
 
 import db from '.';
 
@@ -59,10 +59,10 @@ Matches.init({
   underscored: true,
 });
 
-/* SequelizeTeams.hasMany(Matches, { foreignKey: 'homeTeam' });
-SequelizeTeams.hasMany(Matches, { foreignKey: 'awayTeam' });
+SequelizeTeams.hasMany(Matches, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+SequelizeTeams.hasMany(Matches, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 
-Matches.belongsTo(SequelizeTeams, { foreignKey: 'homeTeam' });
-Matches.belongsTo(SequelizeTeams, { foreignKey: 'awayTeam' }); */
+Matches.belongsTo(SequelizeTeams, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+Matches.belongsTo(SequelizeTeams, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 
 export default Matches;
