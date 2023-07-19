@@ -48,14 +48,6 @@ export default class MatchesModel implements IMatchModel {
   }
 
   async insertMatch(newMatch: INewMatch): Promise<IMatch> {
-    if (newMatch.homeTeamId === newMatch.awayTeamId) {
-      throw new Error('the teams must be different');
-    }
-    const checkHomeTeam = await this.model.findByPk(newMatch.homeTeamId);
-    const checkAwayTeam = await this.model.findByPk(newMatch.awayTeamId);
-    if (!checkHomeTeam || !checkAwayTeam) {
-      throw new Error('Team not found');
-    }
     const createdMatch = await this.model.create({ ...newMatch, inProgress: true });
     return createdMatch;
   }

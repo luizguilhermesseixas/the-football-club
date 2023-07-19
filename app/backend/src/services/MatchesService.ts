@@ -3,12 +3,15 @@ import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import { IMatchModel } from '../Interfaces/Matches/IMatchModel';
 import { IFinish, IMatch, INewMatch } from '../Interfaces/Matches/IMatch';
 import MatchesModel from '../database/models/MatchesModel';
+import { ITeamsModel } from '../Interfaces/Teams/ITeamsModel';
+import TeamsModel from '../database/models/TeamsModel';
 
 const invalidTokenMessage = 'Token must be a valid token';
 
 export default class MatchesServices {
   constructor(
     private matchesModel: IMatchModel = new MatchesModel(),
+    private teamsModel: ITeamsModel = new TeamsModel(),
     private jwtUtils = new JwtUtils(),
   ) { }
 
@@ -50,6 +53,15 @@ export default class MatchesServices {
   public async insertMatch(newMatch: INewMatch, token: string): Promise<ServiceResponse<IMatch>> {
     try {
       this.jwtUtils.decode(token);
+      if (newMatch.homeTeamId === newMatch.awayTeamId) {
+        return { status: 'UNPROCESSABLE',
+          data: { message: 'It is not possible to create a match with two equal teams' } };
+      }
+      const checkHomeTeam = await this.teamsModel.findById(newMatch.homeTeamId);
+      const checkAwayTeam = await this.teamsModel.findById(newMatch.awayTeamId);
+      if (!checkHomeTeam || !checkAwayTeam) {
+        return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
+      }
       const match = await this.matchesModel.insertMatch(newMatch);
       return { status: 'CREATED', data: match };
     } catch (error) {
