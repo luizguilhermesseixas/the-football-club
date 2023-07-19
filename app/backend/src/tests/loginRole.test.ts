@@ -8,7 +8,6 @@ import { App } from '../app';
 import * as jwt from 'jsonwebtoken';
 import SequelizeUsers from '../database/models/SequelizeUsers'
 import { validToken, invalidToken, user } from './mocks/Users.mock';
-import JwtUtils from '../utils/JwtUtils';
 import { IPayload, IUser } from '../Interfaces/Users/IUser';
 /* import Validations from '../../src/middlewares/Validations'; */
 
@@ -30,7 +29,7 @@ describe('login/role test', async function () {
   });
   it('checks if when searching the route with a invalid token, it returns an error message', async function () {
     sinon.stub(jwt, 'verify').throws({ error: 'erro' });
-    const { status, body } = await chai.request(app).get('/login/role').set(' Authorization', `Bearer ${invalidToken}`);
+    const { status, body } = await chai.request(app).get('/login/role').set('Authorization', `Bearer ${invalidToken}`);
 
     expect(status).to.equal(401);
     expect(body).to.be.deep.equal({ message: "Token must be a valid token" });
