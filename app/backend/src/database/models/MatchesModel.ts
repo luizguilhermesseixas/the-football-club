@@ -38,4 +38,8 @@ export default class MatchesModel implements IMatchModel {
       include,
     });
   }
+
+  async update(id: number) {
+    this.model.update({ inProgress: false }, { where: { id } });
+  }
 }

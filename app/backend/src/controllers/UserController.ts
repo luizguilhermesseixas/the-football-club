@@ -15,7 +15,6 @@ export default class UserController {
 
   public async getRole(_req: Request, res: Response) {
     const token = res.locals.user;
-    console.log(token);
     const { status, data } = await this.userService.getRole(token);
     res.status(mapStatusHTTP(status)).json(data);
   }

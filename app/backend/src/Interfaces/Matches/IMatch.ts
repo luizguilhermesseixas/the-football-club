@@ -6,3 +6,7 @@ export interface IMatch {
   awayTeamGoals: number;
   inProgress?: boolean;
 }
+
+export interface IFinish {
+  message: string
+}
