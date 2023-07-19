@@ -1,4 +1,3 @@
-// import { ID } from '../Interfaces/index';
 import JwtUtils from '../utils/JwtUtils';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import { IMatchModel } from '../Interfaces/Matches/IMatchModel';
@@ -25,6 +24,21 @@ export default class MatchesServices {
     try {
       this.jwtUtils.decode(token);
       this.matchesModel.update(id);
+      return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
+    } catch (error) {
+      return { status: 'UNAUTHORIZED', data: { message: 'Token must be a valid token' } };
+    }
+  }
+
+  public async matchResult(
+    id: number,
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+    token: string,
+  ): Promise<ServiceResponse<IFinish>> {
+    try {
+      this.jwtUtils.decode(token);
+      this.matchesModel.updateResult(id, homeTeamGoals, awayTeamGoals);
       return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
     } catch (error) {
       return { status: 'UNAUTHORIZED', data: { message: 'Token must be a valid token' } };
