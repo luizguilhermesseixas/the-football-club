@@ -34,6 +34,28 @@ describe('matches test', function () {
     expect(body).to.deep.equal(matchesInProgress);
   });
 
+  it('should change a match progress status', async function () {
+    sinon.stub(jwt, 'verify').returns({ email: 'user@user.com' } as any);
+    sinon.stub(SequelizeMatches, 'update').resolves([0]);
+    const { status, body } = await chai.request(app).patch('/matches/41/finish').set('Authorization', `Bearer ${validToken}`);
+
+    expect(status).to.equal(200);
+    expect(body).to.deep.equal({
+      message: "Finished"
+    })
+  });
+
+  it('should return an error if try to change a match progress status with an invalid token', async function () {
+    sinon.stub(jwt, 'verify').throws({ error: 'erro' });
+    /* sinon.stub(SequelizeMatches, 'update').resolves([0]); */
+    const { status, body } = await chai.request(app).patch('/matches/41/finish').set('Authorization', `Bearer ${invalidToken}`);
+
+    expect(status).to.equal(401);
+    expect(body).to.deep.equal({
+      message: "Token must be a valid token"
+    });
+  });
+
   it('should change a match result', async function () {
     sinon.stub(jwt, 'verify').returns({ email: 'user@user.com' } as any);
     sinon.stub(SequelizeMatches, 'update').resolves([0]);
