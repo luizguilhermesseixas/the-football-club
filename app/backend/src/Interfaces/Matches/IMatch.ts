@@ -7,6 +7,13 @@ export interface IMatch {
   inProgress?: boolean;
 }
 
+export interface INewMatch {
+  homeTeamId: number;
+  awayTeamId: number;
+  homeTeamGoals: number;
+  awayTeamGoals: number;
+}
+
 export interface IFinish {
   message: string
 }

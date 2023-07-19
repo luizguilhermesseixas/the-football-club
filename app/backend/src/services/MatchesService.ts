@@ -1,8 +1,10 @@
 import JwtUtils from '../utils/JwtUtils';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import { IMatchModel } from '../Interfaces/Matches/IMatchModel';
-import { IFinish, IMatch } from '../Interfaces/Matches/IMatch';
+import { IFinish, IMatch, INewMatch } from '../Interfaces/Matches/IMatch';
 import MatchesModel from '../database/models/MatchesModel';
+
+const invalidTokenMessage = 'Token must be a valid token';
 
 export default class MatchesServices {
   constructor(
@@ -26,7 +28,7 @@ export default class MatchesServices {
       this.matchesModel.update(id);
       return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
     } catch (error) {
-      return { status: 'UNAUTHORIZED', data: { message: 'Token must be a valid token' } };
+      return { status: 'UNAUTHORIZED', data: { message: invalidTokenMessage } };
     }
   }
 
@@ -41,7 +43,17 @@ export default class MatchesServices {
       this.matchesModel.updateResult(id, homeTeamGoals, awayTeamGoals);
       return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
     } catch (error) {
-      return { status: 'UNAUTHORIZED', data: { message: 'Token must be a valid token' } };
+      return { status: 'UNAUTHORIZED', data: { message: invalidTokenMessage } };
+    }
+  }
+
+  public async insertMatch(newMatch: INewMatch, token: string): Promise<ServiceResponse<IMatch>> {
+    try {
+      this.jwtUtils.decode(token);
+      const match = await this.matchesModel.insertMatch(newMatch);
+      return { status: 'CREATED', data: match };
+    } catch (error) {
+      return { status: 'UNAUTHORIZED', data: { message: invalidTokenMessage } };
     }
   }
 }

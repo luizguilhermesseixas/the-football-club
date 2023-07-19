@@ -33,4 +33,11 @@ export default class MatchesController {
       .matchResult(Number(id), homeTeamGoals, awayTeamGoals, token);
     return res.status(mapStatusHTTP(status)).json(data);
   }
+
+  public async insertMatch(req: Request, res: Response) {
+    const token = res.locals.user;
+    const newMatch = req.body;
+    const { status, data } = await this.matchesService.insertMatch(newMatch, token);
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
 }

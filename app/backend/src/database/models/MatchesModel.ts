@@ -1,7 +1,7 @@
 import { IMatchModel } from '../../Interfaces/Matches/IMatchModel';
 import SequelizeMatches from './SequelizeMatches';
 import SequelizeTeams from './SequelizeTeams';
-import { IMatch } from '../../Interfaces/Matches/IMatch';
+import { IMatch, INewMatch } from '../../Interfaces/Matches/IMatch';
 
 const { attributes, include } = {
   attributes: { exclude: ['home_team_id', 'away_team_id'] },
@@ -45,5 +45,18 @@ export default class MatchesModel implements IMatchModel {
 
   async updateResult(id: number, homeTeamGoals: number, awayTeamGoals: number) {
     this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+  }
+
+  async insertMatch(newMatch: INewMatch): Promise<IMatch> {
+    if (newMatch.homeTeamId === newMatch.awayTeamId) {
+      throw new Error('the teams must be different');
+    }
+    const checkHomeTeam = await this.model.findByPk(newMatch.homeTeamId);
+    const checkAwayTeam = await this.model.findByPk(newMatch.awayTeamId);
+    if (!checkHomeTeam || !checkAwayTeam) {
+      throw new Error('Team not found');
+    }
+    const createdMatch = await this.model.create({ ...newMatch, inProgress: true });
+    return createdMatch;
   }
 }
