@@ -1,7 +1,9 @@
 import { IMatchModel } from '../../Interfaces/Matches/IMatchModel';
+import leaderboardQuery from '../../utils/leaderboardQuery';
 import SequelizeMatches from './SequelizeMatches';
 import SequelizeTeams from './SequelizeTeams';
 import { IMatch, INewMatch } from '../../Interfaces/Matches/IMatch';
+import { ILeaderboard } from '../../Interfaces/Leaderboard/ILeaderboard';
 
 const { attributes, include } = {
   attributes: { exclude: ['home_team_id', 'away_team_id'] },
@@ -51,5 +53,11 @@ export default class MatchesModel implements IMatchModel {
   async insertMatch(newMatch: INewMatch): Promise<IMatch> {
     const createdMatch = await this.model.create({ ...newMatch, inProgress: true });
     return createdMatch;
+  }
+
+  async getHomeLeaderboard(): Promise<ILeaderboard[]> {
+    const homeLeaderboard = await
+    this.model.sequelize?.query(leaderboardQuery) as unknown as ILeaderboard[];
+    return homeLeaderboard;
   }
 }
